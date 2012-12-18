@@ -15,7 +15,7 @@ namespace Vector
     {
         List<Shape> Shapes = new List<Shape>();
         Line l = new Line(new Point(), new Point(), false);
-        //Circle c = new Circle(0, 0, 0, 0, false);
+        Circle c = new Circle(0, 0, 0, 0, false);
 
         int Type = 0; // Line;
         public Form1()
@@ -41,7 +41,7 @@ namespace Vector
             }
             else if (Type == 1)
             {
-                //c.SetCoord(e.X, e.Y, 0, 0, true);
+                c.SetCoord(e.X, e.Y, 0, 0, true);
             }
         }
 
@@ -63,12 +63,22 @@ namespace Vector
                 }
                 else if (Type == 1)
                 {
-                    //Shapes.Add(new Circle(c.X, c.Y, e.X - c.X, e.Y - c.Y, false));
+                    Shapes.Add(new Circle(c.X, c.Y, e.X - c.X, e.Y - c.Y, false));
                 }
             }
             l.Move = false;
-            //c.Move = false;
+            c.Move = false;
             this.Refresh();
+        }
+
+        private void radioButton1_CheckedChanged(object sender, EventArgs e)
+        {
+            Type = 0; // Line.
+        }
+
+        private void radioButton2_CheckedChanged(object sender, EventArgs e)
+        {
+            Type = 1; // Circle.
         }
 
     }
@@ -164,6 +174,50 @@ namespace Vector
             sw.WriteLine(Convert.ToString(s.Y));
             sw.WriteLine(Convert.ToString(f.X));
             sw.WriteLine(Convert.ToString(f.Y));
+        }
+    }
+
+    public class Circle : Shape
+    {
+        public int X, Y, Rx, Ry;
+
+        Pen p = new Pen(Color.Black);
+        public override string Desc
+        {
+            get { return "Окружность"; }
+        }
+
+        public Circle(int _X, int _Y, int _Rx, int _Ry, bool _Temp)
+        {
+            Temp = _Temp;
+            SetCoord(_X, _Y, _Rx, _Ry, Move);
+        }
+        public Circle(StreamReader sr)
+        {
+            X = Convert.ToInt32(sr.ReadLine());
+            Y = Convert.ToInt32(sr.ReadLine());
+            Rx = Convert.ToInt32(sr.ReadLine());
+            Ry = Convert.ToInt32(sr.ReadLine());
+        }
+        public void SetCoord(int _X, int _Y, int _Rx, int _Ry, bool _Move)
+        {
+            X = _X;
+            Y = _Y;
+            Rx = _Rx;
+            Ry = _Ry;
+            Move = _Move;
+        }
+        public override void DrawWith(Graphics g)
+        {
+            g.DrawEllipse(p, X, Y, Rx, Rx);
+        }
+        public override void SaveTo(StreamWriter sw)
+        {
+            sw.WriteLine("Circle");
+            sw.WriteLine(Convert.ToString(X));
+            sw.WriteLine(Convert.ToString(Y));
+            sw.WriteLine(Convert.ToString(Rx));
+            sw.WriteLine(Convert.ToString(Ry));
         }
     }
 

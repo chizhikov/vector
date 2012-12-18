@@ -81,6 +81,36 @@ namespace Vector
             Type = 1; // Circle.
         }
 
+        private void Form1_MouseMove(object sender, MouseEventArgs e)
+        {
+            this.Text = Convert.ToString(e.X) + " " + Convert.ToString(e.Y);
+
+            if (Type == 0)
+            {
+                if (Shapes.Count() != 0 && l.Move == true)
+                {
+                    if (Shapes.Last().Temp == true)
+                    {
+                        Shapes.Remove(Shapes.Last());
+                    }
+                    Shapes.Add(new Line(l.s, new Point(e.X, e.Y), true));
+                    this.Refresh();
+                }
+            }
+            else if (Type == 1)
+            {
+                if (Shapes.Count() != 0 && c.Move == true)
+                {
+                    if (Shapes.Last().Temp == true)
+                    {
+                        Shapes.Remove(Shapes.Last());
+                    }
+                    Shapes.Add(new Circle(c.X, c.Y, e.X - c.X, e.Y - c.Y, true));
+                    this.Refresh();
+                }
+            }
+        }
+
     }
 
     public abstract class Shape

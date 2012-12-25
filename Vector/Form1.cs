@@ -25,11 +25,11 @@ namespace Vector
 
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
-            //listBox1.Items.Clear();
+            listBox1.Items.Clear();
             foreach (Shape p in this.Shapes)
             {
                 p.DrawWith(e.Graphics);
-                //listBox1.Items.Add(p.Desc);
+                listBox1.Items.Add(p.Desc);
             }
         }
 
@@ -111,144 +111,50 @@ namespace Vector
             }
         }
 
-    }
-
-    public abstract class Shape
-    {
-        public bool Move = false, Temp = false;
-        public abstract string Desc
+        private void Form1_Load(object sender, EventArgs e)
         {
-            get;
+
         }
-        public abstract void DrawWith(Graphics g);
-        public abstract void SaveTo(StreamWriter sw);
-    }
-
-    public class Cross : Shape
-    {
-        int X, Y, Size;
-        Pen p = new Pen(Color.Black);
-        public override string Desc
+        private void сохранитькакToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            get { return "Точка"; }
+            string curFile = "test.txt";
+            StreamWriter sw = new StreamWriter(curFile);
+            foreach (Shape p in this.Shapes)
+            {
+                p.SaveTo(sw);
+            }
+            sw.Close();
         }
 
-        public Cross(int _X, int _Y, int _Size)
+        private void открытьToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            SetCoord(_X, _Y);
-            SetSize(_Size);
-        }
-        public Cross(StreamReader sr)
-        {
-            X = Convert.ToInt32(sr.ReadLine());
-            Y = Convert.ToInt32(sr.ReadLine());
-            Size = Convert.ToInt32(sr.ReadLine());
-        }
-        public void SetCoord(int _X, int _Y)
-        {
-            X = _X;
-            Y = _Y;
-        }
-        public void SetSize(int _Size)
-        {
-            Size = _Size;
-        }
-        public override void DrawWith(Graphics g)
-        {
-            g.DrawLine(p, X - Size, Y - Size, X + Size, Y + Size);
-            g.DrawLine(p, X - Size, Y + Size, X + Size, Y - Size);
-        }
-        public override void SaveTo(StreamWriter sw)
-        {
-            sw.WriteLine("Cross");
-            sw.WriteLine(Convert.ToString(X));
-            sw.WriteLine(Convert.ToString(Y));
-            sw.WriteLine(Convert.ToString(Size));
+            this.Shapes.Clear();
+            string curFile = "test.txt";
+            StreamReader sr = new StreamReader (curFile);
+            while (!sr.EndOfStream)
+            {
+                string type = sr.ReadLine();
+                switch (type)
+                {
+                    case "Cross":
+                        Shapes.Add(new Cross(sr));
+                        break;
+                    case "Line":
+                        Shapes.Add(new Line(sr));
+                        break;
+                    case "Circle":
+                        Shapes.Add(new Circle(sr));
+                        break;
+                }
+            }
+            sr.Close();
+            this.Refresh();
         }
     }
 
-    public class Line : Shape
-    {
-        public Point s, f;
-        Pen p = new Pen(Color.Black);
-        public override string Desc
-        {
-            get { return "Линия"; }
-        }
-        public Line(Point _s, Point _f, bool _Temp)
-        {
-            Temp = _Temp;
-            SetCoord(_s, _f, Move);
-        }
-        public Line(StreamReader sr)
-        {
-            s.X = Convert.ToInt32(sr.ReadLine());
-            s.Y = Convert.ToInt32(sr.ReadLine());
-            f.X = Convert.ToInt32(sr.ReadLine());
-            f.Y = Convert.ToInt32(sr.ReadLine());
-        }
-        public void SetCoord(Point _s, Point _f, bool _Move)
-        {
-            s = _s;
-            f = _f;
-            Move = _Move;
-        }
-        public override void DrawWith(Graphics g)
-        {
-            g.DrawLine(p, s, f);
-        }
-        public override void SaveTo(StreamWriter sw)
-        {
-            sw.WriteLine("Line");
-            sw.WriteLine(Convert.ToString(s.X));
-            sw.WriteLine(Convert.ToString(s.Y));
-            sw.WriteLine(Convert.ToString(f.X));
-            sw.WriteLine(Convert.ToString(f.Y));
-        }
-    }
+    
 
-    public class Circle : Shape
-    {
-        public int X, Y, Rx, Ry;
 
-        Pen p = new Pen(Color.Black);
-        public override string Desc
-        {
-            get { return "Окружность"; }
-        }
-
-        public Circle(int _X, int _Y, int _Rx, int _Ry, bool _Temp)
-        {
-            Temp = _Temp;
-            SetCoord(_X, _Y, _Rx, _Ry, Move);
-        }
-        public Circle(StreamReader sr)
-        {
-            X = Convert.ToInt32(sr.ReadLine());
-            Y = Convert.ToInt32(sr.ReadLine());
-            Rx = Convert.ToInt32(sr.ReadLine());
-            Ry = Convert.ToInt32(sr.ReadLine());
-        }
-        public void SetCoord(int _X, int _Y, int _Rx, int _Ry, bool _Move)
-        {
-            X = _X;
-            Y = _Y;
-            Rx = _Rx;
-            Ry = _Ry;
-            Move = _Move;
-        }
-        public override void DrawWith(Graphics g)
-        {
-            g.DrawEllipse(p, X, Y, Rx, Rx);
-        }
-        public override void SaveTo(StreamWriter sw)
-        {
-            sw.WriteLine("Circle");
-            sw.WriteLine(Convert.ToString(X));
-            sw.WriteLine(Convert.ToString(Y));
-            sw.WriteLine(Convert.ToString(Rx));
-            sw.WriteLine(Convert.ToString(Ry));
-        }
-    }
+    
 
 }

@@ -115,7 +115,8 @@ namespace Vector
         {
 
         }
-        private void сохранитькакToolStripMenuItem_Click(object sender, EventArgs e)
+
+        private void сохранитькакToolStripMenuItem_Click_1(object sender, EventArgs e)
         {
             string curFile = "test.txt";
             StreamWriter sw = new StreamWriter(curFile);
@@ -126,11 +127,11 @@ namespace Vector
             sw.Close();
         }
 
-        private void открытьToolStripMenuItem_Click(object sender, EventArgs e)
+        private void открытьToolStripMenuItem_Click_1(object sender, EventArgs e)
         {
             this.Shapes.Clear();
             string curFile = "test.txt";
-            StreamReader sr = new StreamReader (curFile);
+            StreamReader sr = new StreamReader(curFile);
             while (!sr.EndOfStream)
             {
                 string type = sr.ReadLine();
@@ -151,10 +152,4 @@ namespace Vector
             this.Refresh();
         }
     }
-
-    
-
-
-    
-
 }

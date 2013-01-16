@@ -14,8 +14,10 @@ namespace Vector
     public partial class Form1 : Form
     {
         List<Shape> Shapes = new List<Shape>();
-        Line l = new Line(new Point(), new Point(), false);
-        Circle c = new Circle(0, 0, 0, 0, false);
+        List<Shape> tempShapes = new List<Shape>();
+
+        Line l = new Line(new Point(), new Point());
+        Circle c = new Circle(0, 0, 0, 0);
 
         int Type = 0; // Line;
         public Form1()
@@ -25,11 +27,16 @@ namespace Vector
 
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
-            listBox1.Items.Clear();
             foreach (Shape p in this.Shapes)
             {
                 p.DrawWith(e.Graphics);
-                listBox1.Items.Add(p.Desc);
+            }
+            if (tempShapes.Count() != 0)
+            {
+                foreach (Shape p in this.tempShapes)
+                {
+                    p.DrawWith(e.Graphics);
+                }
             }
         }
 
@@ -47,28 +54,28 @@ namespace Vector
 
         private void Form1_MouseUp_1(object sender, MouseEventArgs e)
         {
-            if (Shapes.Count() != 0 && Shapes.Last().Temp == true)
-            {
-                Shapes.Remove(Shapes.Last());
-            }
             if (l.s.X == e.X && l.s.Y == e.Y)
             {
                 Shapes.Add(new Cross(e.X, e.Y, 3));
             }
             else
             {
-                if (Type == 0)
+                if (tempShapes.Count() != 0)
                 {
-                    Shapes.Add(new Line(l.s, new Point(e.X, e.Y), false));
-                }
-                else if (Type == 1)
-                {
-                    Shapes.Add(new Circle(c.X, c.Y, e.X - c.X, e.Y - c.Y, false));
+                    Shapes.Add(tempShapes.Last());
+                    tempShapes.Remove(tempShapes.Last());
                 }
             }
+
             l.Move = false;
             c.Move = false;
             this.Refresh();
+            listBox1.Items.Clear();
+
+            foreach (Shape p in this.Shapes)
+            {
+                listBox1.Items.Add(p.Desc);
+            }
         }
 
         private void radioButton1_CheckedChanged(object sender, EventArgs e)
@@ -85,35 +92,23 @@ namespace Vector
         {
             this.Text = Convert.ToString(e.X) + " " + Convert.ToString(e.Y);
 
-            if (Type == 0)
+            if (l.Move == true || c.Move == true)
             {
-                if (Shapes.Count() != 0 && l.Move == true)
+                if (tempShapes.Count() != 0)
                 {
-                    if (Shapes.Last().Temp == true)
-                    {
-                        Shapes.Remove(Shapes.Last());
-                    }
-                    Shapes.Add(new Line(l.s, new Point(e.X, e.Y), true));
-                    this.Refresh();
+                    tempShapes.Remove(tempShapes.Last());
                 }
-            }
-            else if (Type == 1)
-            {
-                if (Shapes.Count() != 0 && c.Move == true)
+
+                if (Type == 0)
                 {
-                    if (Shapes.Last().Temp == true)
-                    {
-                        Shapes.Remove(Shapes.Last());
-                    }
-                    Shapes.Add(new Circle(c.X, c.Y, e.X - c.X, e.Y - c.Y, true));
-                    this.Refresh();
+                    tempShapes.Add(new Line(l.s, new Point(e.X, e.Y)));
                 }
+                else if (Type == 1)
+                {
+                    tempShapes.Add(new Circle(c.X, c.Y, e.X - c.X, e.Y - c.Y));
+                }
+                this.Refresh();
             }
-        }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-
         }
 
         private void сохранитькакToolStripMenuItem_Click_1(object sender, EventArgs e)
@@ -150,6 +145,11 @@ namespace Vector
             }
             sr.Close();
             this.Refresh();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -9,7 +9,7 @@ namespace Vector
 {
     public abstract class Shape
     {
-        public bool Move = false, Temp = false;
+        public bool Move = false;
         public abstract string Desc
         {
             get;
@@ -69,9 +69,8 @@ namespace Vector
         {
             get { return "Линия"; }
         }
-        public Line(Point _s, Point _f, bool _Temp)
+        public Line(Point _s, Point _f)
         {
-            Temp = _Temp;
             SetCoord(_s, _f, Move);
         }
         public Line(StreamReader sr)
@@ -111,9 +110,8 @@ namespace Vector
             get { return "Окружность"; }
         }
 
-        public Circle(int _X, int _Y, int _Rx, int _Ry, bool _Temp)
+        public Circle(int _X, int _Y, int _Rx, int _Ry)
         {
-            Temp = _Temp;
             SetCoord(_X, _Y, _Rx, _Ry, Move);
         }
         public Circle(StreamReader sr)
